@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Page</title>
+    <style>
+         body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1{
+            margin: 0 auto;
+            width: 50%;  
+            font-size:3em;
+            margin-top: 0.5em;
+            margin-bottom: 2.5em;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        select {
+            font-size: 1.2em;
+            padding: 5px;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        .buttons button {
+            font-size: 1.2em;
+            padding: 10px 20px;
+            margin: 0 10px;
+        }
+
+        button[type= GoBack]{
+            margin: 0 auto;
+            width: 15%;
+            font-size: 1.5em;
+            margin-top: 1em;
+            margin-bottom: 1em;
+            display: block;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Report</h1>
+
+    <div class="form-group">
+        <label for="user">User:</label>
+        <select id="user" name="user">
+            <option value="mr">Mr.</option>
+            <option value="mrs">Mrs.</option>
+            <option value="ms">Ms.</option>
+            <option value="dr">Dr.</option>
+        </select>
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="yesButton">Yes</button>
+        <button type="button" id="noButton">No</button>
+    </div>
+    <br>
+
+    <div class="form-group">
+        <label for="user">Log Attemps:</label>
+        <select id="user" name="user">
+            <option value="mr">Mr.</option>
+            <option value="mrs">Mrs.</option>
+            <option value="ms">Ms.</option>
+            <option value="dr">Dr.</option>
+        </select>
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="yesButton">Yes</button>
+        <button type="button" id="noButton">No</button>
+    </div>
+    <br>
+
+    <div class="form-group">
+        <label for="user">Clients:</label>
+        <select id="user" name="user">
+            <option value="mr">Mr.</option>
+            <option value="mrs">Mrs.</option>
+            <option value="ms">Ms.</option>
+            <option value="dr">Dr.</option>
+        </select>
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="yesButton">Yes</button>
+        <button type="button" id="noButton">No</button>
+    </div>
+    <br>
+
+    <div class="form-group">
+        <label for="user">Access Attempts:</label>
+        <select id="user" name="user">
+            <option value="mr">Mr.</option>
+            <option value="mrs">Mrs.</option>
+            <option value="ms">Ms.</option>
+            <option value="dr">Dr.</option>
+        </select>
+    </div>
+
+    <div class="buttons">
+        <button type="button" id="yesButton">Yes</button>
+        <button type="button" id="noButton">No</button>
+    </div>
+    <br>
+
+    <button type="submit">Generate Report</button>
+
+    <p>
+        <button type="GoBack" id="GoBack" name="GoBack">Go Back</button>
+
+    </p>
+</body>
+</html>

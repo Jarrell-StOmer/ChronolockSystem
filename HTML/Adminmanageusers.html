@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1{
+            margin: 0 auto;
+            width: 50%;  
+            font-size:3em;
+            margin-top: 0.5em;
+            margin-bottom: 2.5em;
+        }
+
+        table {
+            margin: 0 auto;
+            width: 80%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .sidebar {
+            position: absolute;
+            top: 200px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar button {
+            width: 150px;
+            padding: 10px;
+            font-size: 1em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Administrator | Manage Users</h1>
+
+    <div class="sidebar">
+        <button type="button" id="addUser">Add User</button>
+        <button type="button" id="deleteUser">Delete User</button>
+        <button type="button" id="duration">Duration</button>
+        <button type="button" id="search">Search</button>
+    </div>
+
+        <table>
+            <tr>
+                <th>UserID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Passcode Duration</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>JohnDoe</td>
+                <td>Admin</td>
+                <td>30 days</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>JaneSmith</td>
+                <td>User</td>
+                <td>15 days</td>
+            </tr>
+        </table>
+   
+    
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronoLock</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1{
+            margin: 0 auto;
+            width: 50%;  
+            font-size:3em;
+            margin-top: 0.5em;
+            margin-bottom: 2.5em;
+        }
+
+        h2{
+            margin: 0 auto;
+            width: 25%;  
+            font-size:1.5em;
+            margin-top: 2em;
+            margin-bottom: 0.1em;
+        }
+
+        input{
+            margin: 0 auto;
+            width: 15%;  
+            font-size:1.5em;
+            margin-top: 0.1em;
+            margin-bottom: 0.5em;
+        }
+
+        button[type= "ChPasscode"]{
+            margin: 0 auto;
+            width: 15%;
+            font-size: 1.5em;
+            margin-top: 1em;
+            margin-bottom: 1em;
+            display: block;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chronolock Smart System | User</h1>
+    <p>
+        <h2>Passcode</h2>
+        <br>
+         <input type="text" id="passcode" name="passcode" required> 
+
+    </p>
+    
+    <p>
+        <h2>Timer</h2>
+        <br>
+         <input type="text" id="time" name="time" required> 
+
+
+    </p>
+
+    <p>
+
+        <button type="signin" id="GenPasscode" name="GenPasscode">GeneratePasscode</button>
+    </p>
+
+    <p>
+        <button type="ChPasscode" id="ChPasscode" name="ChPasscode">ChangePasscode</button>
+
+    </p>
+</body>
+</html>
