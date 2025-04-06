@@ -11,7 +11,7 @@ lcd = CharLCD(cols = 16, rows = 2, pin_rs = 18, pin_e = 23, pins_data = [4, 17, 
 
 #Write to the LCD
 lcd.cursor_pos = (0, 1)
-lcd.write_string("Enter your PIN:",1,0)
+lcd.write_string("Enter your PIN: ")
 time.sleep(2)
 lcd.clear()
 
