@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,7 +23,7 @@
         input{
             margin: 0 auto;
             width: 55%;  
-            font-size:2em;
+            font-size:1em;
             margin-top: 1em;
             margin-bottom: 0.5em;
         }
@@ -43,20 +44,31 @@
             margin-top: 2em;
             margin-bottom: 3%;
         }
+
+        input::placeholder {
+            font-size: 1em; 
+            color: gray; 
+        }
+
     </style>
 </head>
 <body>
-    <h1>Create User</h1>
-    <p>
-
-        Username: <input type="text" id="username" name="username" required> 
-        <br>
-        Password: <input type="text" id="password" name="password" required> 
+   
+       <form action="/createuser" method="POST"> 
+        <h1>Create User</h1>
         
-    </p>
+        <p>
+            
+            Username: <input type="text" id="username" name="username" placeholder="Enter your username" required> 
 
-    <p>
-        <button type="signin" id="submit" name="submit">SignIn</button>
-    </p>
+            <br>
+           
+            Password: <input type="text" id="password" name="password" placeholder="Enter your password" required> 
+        </p>
+
+        <p>
+            <button type="signin" id="submit" name="submit">SignIn</button>
+        </p>
+      </form>  
 </body>
 </html>
