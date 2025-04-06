@@ -1,5 +1,6 @@
-import mysql.connector
-from app.db import *
+"""import mysql.connector
+from Website import *
+from Website.db import insert_users
 from mysql.connector import Error 
 import traceback
 
@@ -15,9 +16,9 @@ if connection.is_connected():
 username = "joseph"
 userpassword = 1234
 
-insert_users(connection, username ,userpassword)
+insert_users(connection, username, userpassword)
 
-
+"""
 
 
 
