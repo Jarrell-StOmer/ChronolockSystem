@@ -1,4 +1,4 @@
-'''import mysql.connector
+import mysql.connector
 from mysql.connector import Error 
 import traceback
 
@@ -35,4 +35,4 @@ def insert_users(connection, username,userpassword):
 		cursor.close()
 		connection.close()
 		print("MYSQL Conection is closed")
-'''			
+	

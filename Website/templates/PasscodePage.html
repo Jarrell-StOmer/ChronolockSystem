@@ -11,43 +11,31 @@
             padding: 50px;
         }
 
-        h1{
+        h1 {
             margin: 0 auto;
             width: 50%;  
-            font-size:3em;
+            font-size: 3em;
             margin-top: 0.5em;
             margin-bottom: 2.5em;
         }
 
-        h2{
+        h2 {
             margin: 0 auto;
             width: 25%;  
-            font-size:1.5em;
+            font-size: 1.5em;
             margin-top: 2em;
             margin-bottom: 0.1em;
         }
 
-        input{
+        input {
             margin: 0 auto;
             width: 15%;  
-            font-size:1.5em;
+            font-size: 1.5em;
             margin-top: 0.1em;
             margin-bottom: 0.5em;
         }
 
-        button[type= "ChPasscode"]{
-            margin: 0 auto;
-            width: 15%;
-            font-size: 1.5em;
-            margin-top: 1em;
-            margin-bottom: 1em;
-            display: block;
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-        }
-
-        button{
+        button {
             margin: 0 auto;
             width: 20%;
             font-size: 2em;
@@ -62,26 +50,12 @@
     <p>
         <h2>Passcode</h2>
         <br>
-         <input type="text" id="passcode" name="passcode" required> 
-
-    </p>
-    
-    <p>
-        <h2>Timer</h2>
-        <br>
-         <input type="text" id="time" name="time" required> 
-
-
+        <!-- Display the passcode -->
+        <input type="text" id="passcode" name="passcode" value="{{ passcode }}" readonly>
     </p>
 
     <p>
-
-        <button type="signin" id="GenPasscode" name="GenPasscode">GeneratePasscode</button>
-    </p>
-
-    <p>
-        <button type="ChPasscode" id="ChPasscode" name="ChPasscode">ChangePasscode</button>
-
+        <button type="submit" id="GenPasscode" name="GenPasscode">Generate Passcode</button>
     </p>
 </body>
 </html>

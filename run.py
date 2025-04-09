@@ -1,4 +1,4 @@
-"""import mysql.connector
+import mysql.connector
 from Website import *
 from Website.db import insert_users
 from mysql.connector import Error 
@@ -18,7 +18,7 @@ userpassword = 1234
 
 insert_users(connection, username, userpassword)
 
-"""
+
 
 
 
