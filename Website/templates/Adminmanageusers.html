@@ -105,26 +105,22 @@
            
     </script>
 
-        <table>
-            <tr>
-                <th>UserID</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Passcode Duration</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>JohnDoe</td>
-                <td>Admin</td>
-                <td>30 days</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>JaneSmith</td>
-                <td>User</td>
-                <td>15 days</td>
-            </tr>
-        </table>
+<table>
+    <tr>
+        <th>UserID</th>
+        <th>Username</th>
+        <th>Role</th>
+    </tr>
+    <!-- Dynamically populate rows using Jinja2 -->
+    {% for user in users %}
+    <tr>
+        <td>{{ user[0] }}</td>
+        <td>{{ user[1] }}</td>
+        <td>{{ user[2] }}</td>
+    </tr>
+    {% endfor %}
+</table>
+</table>
    
     
 </body>

@@ -75,11 +75,47 @@ def passcode():
 
     return render_template('PasscodePage.html', passcode=passcode)
 
-@views.route('/AdminManage', methods=['GET', 'POST'])
+@views.route('/AdminManage', methods=['GET'])
 def Admin_page():
+    users = []  # Default empty list for users
 
-    return render_template('Adminmanageusers.html')
+    try:
+        # Connect to the database
+        connection = mysql.connector.connect(
+            host='localhost',
+            port=3306,
+            database='lock',
+            user='dev',
+            password='dev'
+        )
 
+        if connection.is_connected():
+            cursor = connection.cursor()
+
+            # Query to fetch user data with roles
+            select_query = """
+                SELECT
+                    users.UserID,
+                    users.Username,
+                    roles.RoleName
+                FROM
+                    users
+                INNER JOIN userroles ON users.UserID = userroles.UserID
+                INNER JOIN roles ON userroles.RoleID = roles.RoleID;
+            """
+            cursor.execute(select_query)
+            users = cursor.fetchall()  # Fetch all rows from the query result
+
+    except Error as e:
+        flash(f"An error occurred while retrieving user data: {e}", category='error')
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+    # Pass the user data to the template
+    return render_template('Adminmanageusers.html', users=users)
 
 @views.route('/Deleteuser', methods=['GET', 'POST'])
 def Delete_page():
