@@ -20,9 +20,9 @@
         }
 
         table {
-            margin: 0 auto;
-            width: 80%;
-            border-collapse: collapse;
+        width: 80%;
+        margin: 0 auto; /* Center the table */
+        border-collapse: collapse;
         }
 
         th, td {
@@ -36,7 +36,7 @@
         }
 
         .sidebar {
-            position: absolute;
+            position: flex;
             top: 200px;
             left: 20px;
             display: flex;
@@ -49,22 +49,61 @@
             padding: 10px;
             font-size: 1em;
         }
+
+        .popup {
+           background-color: rgba(0, 0, 0, 0.5);
+           width: 100vw; 
+           height: 100vh;
+           position: fixed;
+           top:0;
+           display:none;
+           justify-content: center;
+           align-items: center;
+           text-align: center;
+           z-index: 1000;
+        }
+
+        .popupcontent {
+           height: 400px;
+           width: 600px;
+           background-color: white;
+           padding: 20px;
+           border-radius: 5px;
+           position: relative;
+           z-index: 1001;
+        }
     </style>
 </head>
 <body>
     <h1>Administrator | Manage Users</h1>
-
-    <div class="sidebar">
-        <a href="{{ url_for('auth.createuser') }}">
-            <button type="button" id="addUser">Add User</button>
-        </a>
-        <a href="{{ url_for('views.Delete_page') }}">
-            <button type="button" id="deleteUser">Delete User</button>
-        </a>
-        
-        <button type="button" id="duration">Duration</button>
-        <button type="button" id="search">Search</button>
+  
+    <div class="popup">
+        <div class="popupcontent">
+            <h1>Delete User</h1>
+            <p>Delete User: <input type="text" id="delete" name="delete" required></p>
+            <button type="Delete">Delete</button><br><br>
+            <div>
+                <a href="{{ url_for('views.Admin_page') }}">
+                    <button type="button">Back to Admin Manage Users</button>
+                </a>
+            </div>
+        </div>
     </div>
+    
+        <div class="sidebar">
+            <button type="button" id="addUser">Add User</button>
+            <button type="button" id="deleteUser">Delete User</button>
+            <button type="button" id="duration">Duration</button>
+            <button type="button" id="search">Search</button>
+    </div>
+
+    <script>
+
+        document.getElementById("deleteUser").addEventListener("click", function() {
+            document.querySelector(".popup").style.display = "flex";
+        });
+           
+    </script>
 
         <table>
             <tr>
