@@ -55,8 +55,13 @@
     <h1>Administrator | Manage Users</h1>
 
     <div class="sidebar">
-        <button type="button" id="addUser">Add User</button>
-        <button type="button" id="deleteUser">Delete User</button>
+        <a href="{{ url_for('auth.createuser') }}">
+            <button type="button" id="addUser">Add User</button>
+        </a>
+        <a href="{{ url_for('views.Delete_page') }}">
+            <button type="button" id="deleteUser">Delete User</button>
+        </a>
+        
         <button type="button" id="duration">Duration</button>
         <button type="button" id="search">Search</button>
     </div>

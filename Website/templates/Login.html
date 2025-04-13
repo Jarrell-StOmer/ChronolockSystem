@@ -82,7 +82,10 @@
             Password: <input type="text" id="password" name="password" required> 
         </p>  
         
-        <button type="submit" id="submit" name="submit">Login</button>
+        <a href="{{ url_for('views.passcode') }}">
+            <button type="submit" id="submit" name="submit">Login</button>
+        </a>
+        
 
 
         <p>

@@ -74,3 +74,15 @@ def passcode():
             connection.close()
 
     return render_template('PasscodePage.html', passcode=passcode)
+
+@views.route('/AdminManage', methods=['GET', 'POST'])
+def Admin_page():
+
+    return render_template('Adminmanageusers.html')
+
+
+@views.route('/Deleteuser', methods=['GET', 'POST'])
+def Delete_page():
+    
+    return render_template('Deleteuser.html')
+
