@@ -50,7 +50,7 @@
             font-size: 1em;
         }
 
-        .popup {
+        .Delete {
            background-color: rgba(0, 0, 0, 0.5);
            width: 100vw; 
            height: 100vh;
@@ -63,7 +63,53 @@
            z-index: 1000;
         }
 
-        .popupcontent {
+        .Add {
+           background-color: rgba(0, 0, 0, 0.5);
+           width: 100vw; 
+           height: 100vh;
+           position: fixed;
+           top:0;
+           display:none;
+           justify-content: center;
+           align-items: center;
+           text-align: center;
+           z-index: 1000;
+        }
+
+        .Duration {
+           background-color: rgba(0, 0, 0, 0.5);
+           width: 100vw; 
+           height: 100vh;
+           position: fixed;
+           top:0;
+           display:none;
+           justify-content: center;
+           align-items: center;
+           text-align: center;
+           z-index: 1000;
+        }
+
+        .DeleteUser{
+           height: 400px;
+           width: 600px;
+           background-color: white;
+           padding: 20px;
+           border-radius: 5px;
+           position: relative;
+           z-index: 1001;
+        }
+
+        .AddUser{
+           height: 400px;
+           width: 600px;
+           background-color: white;
+           padding: 20px;
+           border-radius: 5px;
+           position: relative;
+           z-index: 1001;
+        }
+
+        .Time{
            height: 400px;
            width: 600px;
            background-color: white;
@@ -77,11 +123,11 @@
 <body>
     <h1>Administrator | Manage Users</h1>
   
-    <div class="popup">
-        <div class="popupcontent">
+    <div class="Delete">
+        <div class="DeleteUser">
             <h1>Delete User</h1>
             <p>Delete User: <input type="text" id="delete" name="delete" required></p>
-            <button type="Delete">Delete</button><br><br>
+            <button type="button">Delete</button><br><br>
             <div>
                 <a href="{{ url_for('views.Admin_page') }}">
                     <button type="button">Back to Admin Manage Users</button>
@@ -90,6 +136,33 @@
         </div>
     </div>
     
+    <div class="Add">
+        <div class="AddUser">
+            <h1>Add User</h1>
+            <p>Add User: <input type="text" id="adduser" name="Adduser" required></p>
+            <button type="button">Add</button><br><br>
+            <div>
+                <a href="{{ url_for('views.Admin_page') }}">
+                    <button type="button">Back to Admin Manage Users</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="Duration">
+        <div class="Time">
+            <h1>Time</h1>
+            <p>Duration: <input type="text" id="time" name="time" required></p>
+            <button type="button">Duration</button><br><br>
+            <div>
+                <a href="{{ url_for('views.Admin_page') }}">
+                    <button type="button">Back to Admin Manage Users</button>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    </body>
         <div class="sidebar">
             <button type="button" id="addUser">Add User</button>
             <button type="button" id="deleteUser">Delete User</button>
@@ -99,10 +172,17 @@
 
     <script>
 
-        document.getElementById("deleteUser").addEventListener("click", function() {
-            document.querySelector(".popup").style.display = "flex";
+        document.getElementById("addUser").addEventListener("click", function() {
+            document.querySelector(".Add").style.display = "flex";
         });
-           
+
+        document.getElementById("deleteUser").addEventListener("click", function() {
+            document.querySelector(".Delete").style.display = "flex";
+        });
+        
+        document.getElementById("duration").addEventListener("click", function() {
+            document.querySelector(".Duration").style.display = "flex";
+        });
     </script>
 
 <table>
