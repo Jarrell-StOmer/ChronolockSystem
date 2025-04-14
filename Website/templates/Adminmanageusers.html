@@ -126,8 +126,11 @@
     <div class="Delete">
         <div class="DeleteUser">
             <h1>Delete User</h1>
-            <p>Delete User: <input type="text" id="delete" name="delete" required></p>
-            <button type="button">Delete</button><br><br>
+            <form action="{{ url_for('views.delete_user') }}" method="POST">
+                <p>Delete User: <input type="text" id="delete" name="Delete" required></p>
+                <p>UserID: <input type="text" id="userid" name="Userid" required></p>
+                <button type="submit">Delete</button><br><br>
+            </form>
             <div>
                 <a href="{{ url_for('views.Admin_page') }}">
                     <button type="button">Back to Admin Manage Users</button>
@@ -139,8 +142,12 @@
     <div class="Add">
         <div class="AddUser">
             <h1>Add User</h1>
-            <p>Add User: <input type="text" id="adduser" name="Adduser" required></p>
-            <button type="button">Add</button><br><br>
+            <form action="{{ url_for('views.add_user') }}" method="POST">
+                <p>Create Username: <input type="text" id="adduser" name="Adduser" required></p>
+                <p>Create Password: <input type="password" id="addpassword" name="Addpassword" required></p>
+                <p>Role: <input type="text" id="addrole" name="Addrole" placeholder="1=Administration, 2=User" required></p>
+                <button type="submit">Add</button><br><br>
+            </form>
             <div>
                 <a href="{{ url_for('views.Admin_page') }}">
                     <button type="button">Back to Admin Manage Users</button>
@@ -171,6 +178,17 @@
     </div>
 
     <script>
+
+function validateRole() {
+        
+    const roleInput = document.getElementById("addrole").value;
+        if (roleInput === "1" || roleInput === "2") {
+            alert("User added successfully!");
+            document.getElementById("addUserForm").submit(); 
+        } else {
+            alert("Invalid role! Please enter either 1 (Admin) or 2 (User).");
+        }
+        }
 
         document.getElementById("addUser").addEventListener("click", function() {
             document.querySelector(".Add").style.display = "flex";

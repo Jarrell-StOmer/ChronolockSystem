@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 import mysql.connector
 from mysql.connector import Error
 import random
@@ -75,7 +75,7 @@ def passcode():
 
     return render_template('PasscodePage.html', passcode=passcode)
 
-@views.route('/AdminManage', methods=['GET'])
+@views.route('/AdminManage', methods=['GET' , 'POST'])
 def Admin_page():
     users = []  # Default empty list for users
 
@@ -113,12 +113,99 @@ def Admin_page():
         if connection.is_connected():
             cursor.close()
             connection.close()
-
-    # Pass the user data to the template
     return render_template('Adminmanageusers.html', users=users)
 
-@views.route('/Deleteuser', methods=['GET', 'POST'])
-def Delete_page():
-    
-    return render_template('Deleteuser.html')
+
+@views.route('/add_user', methods=['POST'])
+def add_user():
+    if request.method == 'POST':
+        username = request.form.get('Adduser')
+        password = request.form.get('Addpassword')
+        role = request.form.get('Addrole')
+
+        # Validate the role input
+        if role not in ['1', '2']:
+            flash('Invalid role! Please enter either 1 (Admin) or 2 (User).', category='error')
+            return render_template('Adminmanageusers.html')
+
+        try:
+            # Connect to the database
+            connection = mysql.connector.connect(
+                host='localhost',
+                port=3306,
+                database='lock',
+                user='dev',
+                password='dev'
+            )
+
+            if connection.is_connected():
+                cursor = connection.cursor()
+
+                # Insert the new user into the database
+                insert_user_query = """
+                    INSERT INTO users (Username, USerPassword)
+                    VALUES (%s, %s);
+                """
+                cursor.execute(insert_user_query, (username, password))
+                connection.commit()
+
+                # Get the UserID of the newly inserted user
+                user_id = cursor.lastrowid
+
+                # Insert the role into the userroletable
+                insert_role_query = """
+                    INSERT INTO userroles (UserID, RoleID)
+                    VALUES (%s, %s);
+                """
+                cursor.execute(insert_role_query, (user_id, role))
+                connection.commit()
+
+                flash('User added successfully!', category='success')
+
+        except Error as e:
+            flash(f"An error occurred while adding the user: {e}", category='error')
+
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+        return redirect(url_for('views.Admin_page'))
+ 
+
+@views.route('/delete_user', methods=['POST'])
+def delete_user():
+    if request.method == 'POST':
+        username = request.form.get('Delete')  # Get the username from the form
+        user = request.form.get('Userid')  # Get the user ID from the form
+        try:
+            # Connect to the database
+            connection = mysql.connector.connect(
+                host='localhost',
+                port=3306,
+                database='lock',
+                user='dev',
+                password='dev'
+            )
+
+            if connection.is_connected():
+                cursor = connection.cursor()
+
+
+             
+            delete_role_query = """
+                        DELETE FROM users WHERE UserID = %s;
+                    """
+            cursor.execute(delete_role_query, (user))
+            connection.commit()
+
+
+        except Error as e:
+            flash(f"An error occurred while deleting the user: {e}", category='error')
+
+        finally:
+            if connection.is_connected():
+                cursor.close()
+                connection.close()
+
+        return redirect(url_for('views.Admin_page'))
 

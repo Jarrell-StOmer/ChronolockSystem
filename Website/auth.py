@@ -12,7 +12,7 @@ def login():
 
 
 
-@auth.route('/createuser', methods=['Get','POST'])
+'''@auth.route('/createuser', methods=['Get','POST'])
 def createuser():
     if request.method == 'POST':
         username = request.form.get('username')
@@ -52,4 +52,4 @@ def createuser():
                     cursor.close()
                     connection.close()
 
-    return render_template('Createuser.html')
+    return render_template('Createuser.html')'''
