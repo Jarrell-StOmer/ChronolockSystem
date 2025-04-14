@@ -57,41 +57,25 @@
     </style>
 </head>
 <body>
-    
-        <h1>ChronoLock Smart System</h1>
+    <h1>ChronoLock Smart System</h1>
 
-
-    
-        <h2>Administration</h2>
-
-
-        <p> 
-            Username: <input type="text" id="username" name="username" required> 
-            Password: <input type="text" id="password" name="password" required> 
-        </p>  
-        
-        <button type="submit" id="submit" name="submit">Login</button>
-
-
-        
-        <h2>User</h2>
-
-
-        <p> 
-            Username: <input type="text" id="username" name="username" required> 
-            Password: <input type="text" id="password" name="password" required> 
-        </p>  
-        
-        <a href="{{ url_for('views.passcode') }}">
-            <button type="submit" id="submit" name="submit">Login</button>
-        </a>
-        
-
-
+    <h2>Administrator Login</h2>
+    <form action="/" method="POST">
         <p>
-            
-            <button type="signin" id="submit" name="submit">SignIn</button>
+            Username: <input type="text" id="admin_username" name="Adminusername" required>
+            Password: <input type="password" id="admin_password" name="Adminpassword" required>
         </p>
+        <button type="submit">Login as Admin</button>
+    </form>
+
+    <h2>User Login</h2>
+    <form action="/" method="POST">
+        <p>
+            Username: <input type="text" id="user_username" name="username" required>
+            Password: <input type="password" id="user_password" name="password" required>
+        </p>
+        <button type="submit">Login as User</button>
+    </form>
 
         
 </body>
