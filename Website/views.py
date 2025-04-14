@@ -176,7 +176,8 @@ def add_user():
 def delete_user():
     if request.method == 'POST':
         username = request.form.get('Delete')  # Get the username from the form
-        user = request.form.get('Userid')  # Get the user ID from the form
+        user_id = request.form.get('Userid')  # Get the UserID from the form
+
         try:
             # Connect to the database
             connection = mysql.connector.connect(
@@ -190,14 +191,31 @@ def delete_user():
             if connection.is_connected():
                 cursor = connection.cursor()
 
+                # Check if the user exists with the given username and UserID
+                check_user_query = """
+                    SELECT UserID FROM users WHERE Username = %s AND UserID = %s;
+                """
+                cursor.execute(check_user_query, (username, user_id))
+                user = cursor.fetchone()
 
-             
-            delete_role_query = """
-                        DELETE FROM users WHERE UserID = %s;
+                if user:
+                    # Delete the user's role from the userroletable
+                    delete_role_query = """
+                        DELETE FROM userroles WHERE UserID = %s;
                     """
-            cursor.execute(delete_role_query, (user))
-            connection.commit()
+                    cursor.execute(delete_role_query, (user_id,))
+                    connection.commit()
 
+                    # Delete the user from the users table
+                    delete_user_query = """
+                        DELETE FROM users WHERE UserID = %s AND Username = %s;
+                    """
+                    cursor.execute(delete_user_query, (user_id, username))
+                    connection.commit()
+
+                    flash('User deleted successfully!', category='success')
+                else:
+                    flash('User not found! Please check the username and UserID.', category='error')
 
         except Error as e:
             flash(f"An error occurred while deleting the user: {e}", category='error')
@@ -208,4 +226,3 @@ def delete_user():
                 connection.close()
 
         return redirect(url_for('views.Admin_page'))
-

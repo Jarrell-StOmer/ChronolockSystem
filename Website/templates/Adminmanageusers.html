@@ -127,7 +127,7 @@
         <div class="DeleteUser">
             <h1>Delete User</h1>
             <form action="{{ url_for('views.delete_user') }}" method="POST">
-                <p>Delete User: <input type="text" id="delete" name="Delete" required></p>
+                <p>Username: <input type="text" id="delete" name="Delete" required></p>
                 <p>UserID: <input type="text" id="userid" name="Userid" required></p>
                 <button type="submit">Delete</button><br><br>
             </form>
