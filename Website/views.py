@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for, session
 import mysql.connector
 from mysql.connector import Error
 import random
@@ -6,47 +6,28 @@ from datetime import datetime, timedelta
 
 views = Blueprint('views', __name__)
 
-@views.route('/passcode', methods=['GET', 'POST'])
+@views.route('/passcode', methods=['GET'])
 def passcode():
-    passcode = None  # Default value for passcode
+    # Render the PasscodePage template
+    return render_template('PasscodePage.html')
 
-    if request.method == 'POST':
-        # Generate a random passcode
-        GenPasscode = random.randint(1000, 9999)
-        CreatedTime = datetime.now()
-        Duration = timedelta(minutes=5)
-        ExpiredTime = CreatedTime + Duration
+@views.route('/generate_passcode', methods=['POST'])
+def generate_passcode_button():
+    # Generate a random passcode
+    passcode = random.randint(1000, 9999)
+    created_time = datetime.now()
+    duration = timedelta(minutes=5)
+    expired_at = created_time + duration
 
-        try:
-            # Connect to the database
-            connection = mysql.connector.connect(
-                host='localhost',
-                port=3306,
-                database='lock',
-                user='dev',
-                password='dev'
-            )
+    # Retrieve the UserID from the session
+    user_id = session.get('UserID')
 
-            if connection.is_connected():
-                cursor = connection.cursor()
+    if not user_id:
+        flash('No user is logged in. Please log in to generate a passcode.', category='error')
+        return redirect(url_for('auth.login'))
 
-                # Insert the generated passcode into the database
-                insert_query = """INSERT INTO passcodes (GenPasscode, CreatedTime, ExpiredTime) VALUES (%s, %s, %s);"""
-                cursor.execute(insert_query, (GenPasscode, CreatedTime, ExpiredTime))
-                connection.commit()
-
-                flash('Passcode generated successfully!', category='success')
-
-        except Error as e:
-            flash(f"An error occurred: {e}", category='error')
-
-        finally:
-            if connection.is_connected():
-                cursor.close()
-                connection.close()
-
-    # Retrieve the most recent passcode from the database
     try:
+        # Connect to the database
         connection = mysql.connector.connect(
             host='localhost',
             port=3306,
@@ -58,22 +39,35 @@ def passcode():
         if connection.is_connected():
             cursor = connection.cursor()
 
-            # Query the most recent passcode
-            select_query = """SELECT GenPasscode FROM passcodes ORDER BY id DESC LIMIT 1;"""
-            cursor.execute(select_query)
-            result = cursor.fetchone()
-            if result:
-                passcode = result[0]  # Retrieve the passcode value
+            # Insert the passcode into the passcodes table
+            insert_passcode_query = """
+                INSERT INTO passcode (UserID, GenPasscode)
+                VALUES (%s, %s);
+            """
+            cursor.execute(insert_passcode_query, (user_id, passcode))
+            connection.commit()
+
+            insert_passcodehistory_query = """
+                INSERT INTO passcodehistory (CreatedTime, ExpiredTime, Duration)
+                VALUES (%s, %s, %s);
+            """
+            cursor.execute(insert_passcodehistory_query, (created_time, expired_at, duration))
+            connection.commit()
+            
+            # Display the passcode and its details on the screen
+            flash(f"The passcode is: {passcode}", category='success')
+            flash(f"The passcode was created at: {created_time.strftime('%Y-%m-%d %H:%M:%S')}", category='info')
+            flash(f"The passcode will expire at: {expired_at.strftime('%Y-%m-%d %H:%M:%S')}", category='info')
 
     except Error as e:
-        flash(f"An error occurred while retrieving the passcode: {e}", category='error')
+        flash(f"An error occurred while storing the passcode: {e}", category='error')
 
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
 
-    return render_template('PasscodePage.html', passcode=passcode)
+    return redirect(url_for('views.passcode'))
 
 @views.route('/AdminManage', methods=['GET' , 'POST'])
 def Admin_page():

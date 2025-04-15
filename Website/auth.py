@@ -16,6 +16,9 @@ def login():
         user_username = request.form.get('username')
         user_password = request.form.get('password')
 
+        user_id = session.get('UserID')
+
+
         try:
             # Connect to the database
             connection = mysql.connector.connect(
@@ -41,6 +44,7 @@ def login():
                     admin = cursor.fetchone()
 
                     if admin:
+                        session['UserID'] = admin[0]  # Store UserID in session
                         flash('Welcome, Administrator!', category='success')
                         return redirect(url_for('views.Admin_page'))  # Redirect to AdminManageUsers page
                     else:
@@ -58,8 +62,12 @@ def login():
                     user = cursor.fetchone()
 
                     if user:
+                        session['UserID'] = user[0]  # Store UserID in session
+                        print(f"Session UserID set to: {session['UserID']}")
                         flash('Welcome, User!', category='success')
                         return redirect(url_for('views.passcode'))  # Redirect to PasscodePage
+                    if user:
+                        print(f"User found: {user}")
                     else:
                         flash('Invalid user credentials.', category='error')
 
@@ -73,7 +81,7 @@ def login():
             if connection.is_connected():
                 cursor.close()
                 connection.close()
-
+    
     return render_template('Login.html')
 
 
