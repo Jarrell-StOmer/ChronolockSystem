@@ -50,6 +50,18 @@
             font-size: 1em;
         }
 
+        .sidebar a {
+        text-decoration: none; /* Remove underline from links */
+        display: inline-block; /* Ensure the link behaves like a block element */
+        }
+
+        .sidebar a button {
+            width: 150px;
+            padding: 10px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
         .Delete {
            background-color: rgba(0, 0, 0, 0.5);
            width: 100vw; 
@@ -76,18 +88,6 @@
            z-index: 1000;
         }
 
-        .Duration {
-           background-color: rgba(0, 0, 0, 0.5);
-           width: 100vw; 
-           height: 100vh;
-           position: fixed;
-           top:0;
-           display:none;
-           justify-content: center;
-           align-items: center;
-           text-align: center;
-           z-index: 1000;
-        }
 
         .DeleteUser{
            height: 400px;
@@ -109,15 +109,9 @@
            z-index: 1001;
         }
 
-        .Time{
-           height: 400px;
-           width: 600px;
-           background-color: white;
-           padding: 20px;
-           border-radius: 5px;
-           position: relative;
-           z-index: 1001;
-        }
+       
+
+    
     </style>
 </head>
 <body>
@@ -156,24 +150,13 @@
         </div>
     </div>
 
-    <div class="Duration">
-        <div class="Time">
-            <h1>Time</h1>
-            <p>Duration: <input type="text" id="time" name="time" required></p>
-            <button type="button">Duration</button><br><br>
-            <div>
-                <a href="{{ url_for('views.Admin_page') }}">
-                    <button type="button">Back to Admin Manage Users</button>
-                </a>
-            </div>
-        </div>
-    </div>
-
     </body>
         <div class="sidebar">
             <button type="button" id="addUser">Add User</button>
             <button type="button" id="deleteUser">Delete User</button>
-            <button type="button" id="duration">Duration</button>
+           <a href="{{ url_for('views.report') }}">
+            <button type="button" id="Report" name="Report">Report</button>
+            </a>
             <button type="button" id="search">Search</button>
     </div>
 

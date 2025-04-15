@@ -53,7 +53,7 @@ def generate_passcode_button():
             """
             cursor.execute(insert_passcodehistory_query, (created_time, expired_at, duration))
             connection.commit()
-            
+
             # Display the passcode and its details on the screen
             flash(f"The passcode is: {passcode}", category='success')
             flash(f"The passcode was created at: {created_time.strftime('%Y-%m-%d %H:%M:%S')}", category='info')
@@ -220,3 +220,47 @@ def delete_user():
                 connection.close()
 
         return redirect(url_for('views.Admin_page'))
+    
+@views.route('/report', methods=['GET', 'POST'])
+def report():
+    users = []  # Default empty list for users
+
+    try:
+        # Connect to the database
+        connection = mysql.connector.connect(
+            host='localhost',
+            port=3306,
+            database='lock',
+            user='dev',
+            password='dev'
+        )
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+
+            # Fetch all data
+            fetch_query = """
+                SELECT 
+                    users.UserID, 
+                    users.Username, 
+                    passcodehistory.CreatedTime, 
+                    passcodehistory.ExpiredTime, 
+                    logs.logtime,  
+                    rooms.ClientID
+                FROM users
+                LEFT JOIN passcodes ON users.UserID = passcodes.UserID
+                LEFT JOIN logs ON users.UserID = logs.UserID
+                LEFT JOIN rooms ON logs.RoomID = rooms.RoomID;
+            """
+            cursor.execute(fetch_query)
+            users = cursor.fetchall()  # Fetch all rows from the query result
+
+    except Error as e:
+        flash(f"An error occurred while retrieving the report: {e}", category='error')
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+    return render_template('Report.html', users=users)
