@@ -10,26 +10,35 @@
             text-align: center;
             margin: 50px;
         }
-        .flash-message {
-            margin: 10px auto;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            width: 50%;
+        table {
+            margin: 20px auto;
+            width: 80%;
+            border-collapse: collapse;
         }
-        .success {
-            background-color: #d4edda;
-            color: #155724;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
         }
-        .info {
-            background-color: #cce5ff;
-            color: #004085;
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
         }
-        button {
-            font-size: 1.2em;
+        .logout-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+        }
+        .logout-button button {
             padding: 10px 20px;
-            margin-top: 20px;
+            font-size: 1em;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
+        }
+        .logout-button button:hover {
+            background-color: #d32f2f;
         }
     </style>
 </head>
@@ -45,11 +54,37 @@
         {% endif %}
     {% endwith %}
 
-    
+    <!-- Generate New Passcode Form -->
     <form action="{{ url_for('views.generate_passcode_button') }}" method="POST">
-        <!-- Hidden field to pass UserID -->
-        <input type="hidden" name="UserID" value="{{ session['UserID'] }}">
         <button type="submit">Generate New Passcode</button>
     </form>
+
+    <!-- Display Current Passcodes -->
+    <h2>Your Current Passcodes</h2>
+    <table>
+        <tr>
+            <th>Passcode</th>
+            <th>Created Time</th>
+            <th>Expire Time</th>
+        </tr>
+        {% for passcode in passcodes %}
+        <tr>
+            <td>{{ passcode[0] }}</td>
+            <td>{{ passcode[1] }}</td>
+            <td>{{ passcode[2] }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="3">No passcodes available</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <!-- Logout Button -->
+    <div class="logout-button">
+        <a href="{{ url_for('auth.login') }}">
+            <button type="button">Logout</button>
+        </a>
+    </div>
 </body>
 </html>

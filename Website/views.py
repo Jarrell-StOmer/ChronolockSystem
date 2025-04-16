@@ -3,11 +3,14 @@ import mysql.connector
 from mysql.connector import Error
 import random
 from datetime import datetime, timedelta
+import json
+from flask import jsonify
 
 views = Blueprint('views', __name__)
 
 @views.route('/passcode', methods=['GET'])
 def passcode():
+    
     # Render the PasscodePage template
     return render_template('PasscodePage.html')
 
@@ -41,18 +44,21 @@ def generate_passcode_button():
 
             # Insert the passcode into the passcodes table
             insert_passcode_query = """
-                INSERT INTO passcode (UserID, GenPasscode)
-                VALUES (%s, %s);
+                INSERT INTO passcodes (UserID, GenPasscode, CreatedTime, ExpiredTime)
+                VALUES (%s, %s, %s, %s);
             """
-            cursor.execute(insert_passcode_query, (user_id, passcode))
+            cursor.execute(insert_passcode_query, (user_id, passcode, created_time, expired_at))
             connection.commit()
 
-            insert_passcodehistory_query = """
-                INSERT INTO passcodehistory (CreatedTime, ExpiredTime, Duration)
-                VALUES (%s, %s, %s);
+            # Fetch all passcodes for the current user
+            fetch_passcodes_query = """
+                SELECT GenPasscode, CreatedTime, ExpiredTime
+                FROM passcodes
+                WHERE UserID = %s
+                ORDER BY CreatedTime DESC;
             """
-            cursor.execute(insert_passcodehistory_query, (created_time, expired_at, duration))
-            connection.commit()
+            cursor.execute(fetch_passcodes_query, (user_id,))
+            passcodes = cursor.fetchall()  # Fetch all passcodes for the user
 
             # Display the passcode and its details on the screen
             flash(f"The passcode is: {passcode}", category='success')
@@ -61,13 +67,15 @@ def generate_passcode_button():
 
     except Error as e:
         flash(f"An error occurred while storing the passcode: {e}", category='error')
+        passcodes = []
 
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
 
-    return redirect(url_for('views.passcode'))
+    # Render the PasscodePage template with the passcodes
+    return render_template('PasscodePage.html', passcodes=passcodes)
 
 @views.route('/AdminManage', methods=['GET' , 'POST'])
 def Admin_page():
@@ -221,11 +229,16 @@ def delete_user():
 
         return redirect(url_for('views.Admin_page'))
     
-@views.route('/report', methods=['GET', 'POST'])
-def report():
-    users = []  # Default empty list for users
-
+@views.route('/verify_and_display', methods=['POST'])
+def verify_and_display():
     try:
+        data = request.get_json()
+        received_code = data.get('code')
+
+        if not received_code:
+            flash('No code provided', category='error')
+            return redirect(url_for('views.passcode'))
+
         # Connect to the database
         connection = mysql.connector.connect(
             host='localhost',
@@ -238,29 +251,47 @@ def report():
         if connection.is_connected():
             cursor = connection.cursor()
 
-            # Fetch all data
-            fetch_query = """
+            # Query to verify the passcode and fetch user data
+            verify_query = """
                 SELECT 
                     users.UserID, 
                     users.Username, 
-                    passcodehistory.CreatedTime, 
-                    passcodehistory.ExpiredTime, 
-                    logs.logtime,  
-                    rooms.ClientID
-                FROM users
-                LEFT JOIN passcodes ON users.UserID = passcodes.UserID
+                    passcodes.CreatedTime, 
+                    passcodes.ExpiredTime, 
+                    logs.EntryTime, 
+                    rooms.RoomName
+                FROM passcodes
+                INNER JOIN users ON passcodes.UserID = users.UserID
                 LEFT JOIN logs ON users.UserID = logs.UserID
-                LEFT JOIN rooms ON logs.RoomID = rooms.RoomID;
+                LEFT JOIN rooms ON logs.RoomID = rooms.RoomID
+                WHERE passcodes.GenPasscode = %s;
             """
-            cursor.execute(fetch_query)
-            users = cursor.fetchall()  # Fetch all rows from the query result
+            cursor.execute(verify_query, (received_code,))
+            result = cursor.fetchone()
+
+            if result:
+                # If the passcode is valid, prepare user data
+                user_data = {
+                    'UserID': result[0],
+                    'Username': result[1],
+                    'CreateTime': result[2],
+                    'ExpireTime': result[3],
+                    'EntryTime': result[4],
+                    'Room': result[5]
+                }
+
+                # Pass the user data to the Report.html template
+                return render_template('Report.html', user=user_data)
+            else:
+                # If the passcode is invalid, flash an error message
+                flash('Invalid code', category='error')
+                return redirect(url_for('views.passcode'))
 
     except Error as e:
-        flash(f"An error occurred while retrieving the report: {e}", category='error')
+        flash(f"Database error: {e}", category='error')
+        return redirect(url_for('views.passcode'))
 
     finally:
         if connection.is_connected():
             cursor.close()
             connection.close()
-
-    return render_template('Report.html', users=users)

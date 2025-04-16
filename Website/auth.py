@@ -84,7 +84,12 @@ def login():
     
     return render_template('Login.html')
 
-
+@auth.route('/logout', methods=['GET'])
+def logout():
+    # Clear the session
+    session.clear()
+    flash('You have been logged out.', category='success')
+    return redirect(url_for('auth.login'))
 
 '''@auth.route('/createuser', methods=['Get','POST'])
 def createuser():

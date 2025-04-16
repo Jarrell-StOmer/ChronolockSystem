@@ -109,7 +109,25 @@
            z-index: 1001;
         }
 
-       
+        .logout-button {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+    }
+
+    .logout-button button {
+        padding: 10px 20px;
+        font-size: 1em;
+        background-color: #f44336;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .logout-button button:hover {
+        background-color: #d32f2f;
+    }
 
     
     </style>
@@ -154,12 +172,16 @@
         <div class="sidebar">
             <button type="button" id="addUser">Add User</button>
             <button type="button" id="deleteUser">Delete User</button>
-           <a href="{{ url_for('views.report') }}">
+           <a href="{{ url_for('views.verify_and_display') }}">
             <button type="button" id="Report" name="Report">Report</button>
             </a>
             <button type="button" id="search">Search</button>
     </div>
-
+    <div class="logout-button">
+        <a href="{{ url_for('auth.login') }}">
+            <button type="button">Logout</button>
+        </a>
+    </div>
     <script>
 
 function validateRole() {
