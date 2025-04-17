@@ -61,8 +61,12 @@
 
     <!-- Display Current Passcodes -->
     <h2>Your Current Passcodes</h2>
+    <h1>Your Passcodes</h1>
+
+    <!-- Display Current Passcodes -->
     <table>
         <tr>
+            <th>UserID</th>
             <th>Passcode</th>
             <th>Created Time</th>
             <th>Expire Time</th>
@@ -72,10 +76,11 @@
             <td>{{ passcode[0] }}</td>
             <td>{{ passcode[1] }}</td>
             <td>{{ passcode[2] }}</td>
+            <td>{{ passcode[3] }}</td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="3">No passcodes available</td>
+            <td colspan="4">No passcodes available</td>
         </tr>
         {% endfor %}
     </table>
