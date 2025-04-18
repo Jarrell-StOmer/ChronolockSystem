@@ -61,7 +61,8 @@
         <button type="submit">Search</button>
     </form> -->
 
-    <!-- Report Table -->
+    {% if user %}
+    <!-- Display User Data -->
     <table>
         <tr>
             <th>UserID</th>
@@ -80,6 +81,10 @@
             <td>{{ user.Room }}</td>
         </tr>
     </table>
+    {% else %}
+    <!-- Display Message if No User Data -->
+    <p>No user data available. Please try again.</p>
+    {% endif %}
 
     <!-- Back to Manage Users Button -->
     <div class="back-button">
@@ -87,7 +92,5 @@
             <button type="button">Back to Manage Users</button>
         </a>
     </div>
-
-
 </body>
 </html>

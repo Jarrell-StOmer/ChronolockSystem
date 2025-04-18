@@ -8,6 +8,46 @@ from flask import jsonify
 
 views = Blueprint('views', __name__)
 
+@views.route('/access_request/<userId>/<passcode>', methods=['GET'])
+def access_request(userId, passcode):
+
+    try:
+        # Connect to the database
+        connection = mysql.connector.connect(
+            host='localhost',
+            port=3306,
+            database='lock',
+            user='dev',
+            password='dev'
+        )
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+
+            # Query to fetch user data with roles
+            select_query = """
+                SELECT users.Username 
+                FROM passcode 
+                INNER JOIN users ON users.UserID=passcode.UserID
+                WHERE passcode.UserId=%s AND passcode.GenPasscode = %s;"""
+
+            cursor.execute(select_query, (userId, passcode) )
+            user = cursor.fetchall()  # Fetch all rows from the query result
+            
+            if user==[]:
+                return 'False'
+            
+    except Error as e:
+        flash(f"An error occurred while retrieving user data: {e}", category='error')
+
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+    
+        return 'True'  # Return True if the user exists
+
+
 @views.route('/passcode', methods=['GET'])
 def passcode():
     
@@ -16,18 +56,21 @@ def passcode():
 
 @views.route('/generate_passcode', methods=['POST'])
 def generate_passcode_button():
-    passcode = random.randint(1000, 9999)
-    created_time = datetime.now()
-    duration = timedelta(minutes=5)
-    expired_at = created_time + duration
-
-    user_id = session.get('UserID')
-
-    if not user_id:
-        flash('No user is logged in. Please log in to generate a passcode.', category='error')
-        return redirect(url_for('auth.login'))
-
+    connection = None  # Initialize connection to None
     try:
+        # Generate a random passcode
+        passcode = random.randint(1000, 9999)
+        created_time = datetime.now()
+        duration = timedelta(minutes=5)
+        expired_at = created_time + duration
+
+        user_id = session.get('UserID')
+
+        if not user_id:
+            flash('No user is logged in. Please log in to generate a passcode.', category='error')
+            return redirect(url_for('auth.login'))
+
+        # Connect to the database
         connection = mysql.connector.connect(
             host='localhost',
             port=3306,
@@ -58,7 +101,7 @@ def generate_passcode_button():
             cursor.execute(insert_history_query, (passcode_id, created_time, expired_at))
             connection.commit()
 
-            # Fetch all passcodes for the current user, including UserID
+            # Fetch all passcodes for the current user
             fetch_passcodes_query = """
                 SELECT p.UserID, p.GenPasscode, ph.CreatedTime, ph.ExpiredTime
                 FROM passcode p
@@ -79,7 +122,8 @@ def generate_passcode_button():
         passcodes = []
 
     finally:
-        if connection.is_connected():
+        # Safely close the connection if it was successfully initialized
+        if connection and connection.is_connected():
             cursor.close()
             connection.close()
 
@@ -238,6 +282,11 @@ def delete_user():
 
         return redirect(url_for('views.Admin_page'))
     
+@views.route('/report', methods=['GET'])
+def report():
+    # Logic to fetch and display the report
+    return render_template('Report.html')
+
 @views.route('/verify_and_display', methods=['POST', 'GET'])
 def verify_and_display():
     connection = None  # Initialize connection to None
@@ -245,15 +294,15 @@ def verify_and_display():
         # Check if the Content-Type is application/json
         if request.content_type != 'application/json':
             flash('Invalid Content-Type. Expected application/json.', category='error')
-            return redirect(url_for('views.passcode'))
-
+            return render_template('Report.html', user=None)
+        
         # Parse the JSON data from the request
         data = request.get_json()
         received_code = data.get('code')
 
         if not received_code:
             flash('No code provided', category='error')
-            return redirect(url_for('views.passcode'))
+            return render_template('Report.html', user=None)
 
         # Connect to the database
         connection = mysql.connector.connect(
@@ -296,16 +345,37 @@ def verify_and_display():
                     'Room': result[5]
                 }
 
+                 # Generate the current EntryTime
+                entry_time = datetime.now()
+
+                # Insert or update the EntryTime in the logs table
+                update_logs_query = """
+                    INSERT INTO logs (UserID, EntryTime)
+                    VALUES (%s, %s)
+                    ON DUPLICATE KEY UPDATE EntryTime = VALUES(EntryTime);
+                """
+                cursor.execute(update_logs_query, (user_data['UserID'], entry_time))
+                connection.commit()
+
+                # Update the 'used' column in the logattempts table
+                update_log_query = """
+                    UPDATE logattempts
+                    SET used = TRUE
+                    WHERE GenPasscode = %s;
+                """
+                cursor.execute(update_log_query, (received_code,))
+                connection.commit()
+
                 # Pass the user data to the Report.html template
                 return render_template('Report.html', user=user_data)
             else:
                 # If the passcode is invalid, flash an error message
                 flash('Invalid code', category='error')
-                return redirect(url_for('views.Admin_page'))
+                return render_template('Report.html', user=None)
 
     except Error as e:
         flash(f"Database error: {e}", category='error')
-        return redirect(url_for('views.passcode'))
+        return render_template('Report.html', user=None)
 
     finally:
         # Safely close the connection if it was successfully initialized
