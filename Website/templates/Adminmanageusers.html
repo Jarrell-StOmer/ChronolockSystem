@@ -155,9 +155,15 @@
         <div class="AddUser">
             <h1>Add User</h1>
             <form action="{{ url_for('views.add_user') }}" method="POST">
-                <p>Create Username: <input type="text" id="adduser" name="Adduser" required></p>
-                <p>Create Password: <input type="password" id="addpassword" name="Addpassword" required></p>
-                <p>Role: <input type="text" id="addrole" name="Addrole" placeholder="1=Administration, 2=User" required></p>
+                <p>Username: <input type="text" id="adduser" name="Adduser" required></p>
+                <p>Password: <input type="password" id="addpassword" name="Addpassword" required></p>
+                <p>
+                    Role: 
+                    <select id="addrole" name="Addrole" required>
+                        <option value="1">1 - Administrator</option>
+                        <option value="2">2 - User</option>
+                    </select>
+                </p>
                 <button type="submit">Add</button><br><br>
             </form>
             <div>
@@ -174,7 +180,7 @@
             <button type="button" id="deleteUser">Delete User</button>
            
             <a href="{{ url_for('views.report') }}">
-                <button type="button">Go to Report</button>
+                <button type="button">Report</button>
             </a>
             
             <button type="button" id="search">Search</button>
