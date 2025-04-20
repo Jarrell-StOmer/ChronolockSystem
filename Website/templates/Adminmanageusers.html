@@ -192,17 +192,6 @@
     </div>
     <script>
 
-function validateRole() {
-        
-    const roleInput = document.getElementById("addrole").value;
-        if (roleInput === "1" || roleInput === "2") {
-            alert("User added successfully!");
-            document.getElementById("addUserForm").submit(); 
-        } else {
-            alert("Invalid role! Please enter either 1 (Admin) or 2 (User).");
-        }
-        }
-
         document.getElementById("addUser").addEventListener("click", function() {
             document.querySelector(".Add").style.display = "flex";
         });
