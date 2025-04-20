@@ -351,17 +351,18 @@ def verify_and_display():
 
             # Query to verify the passcode and fetch user data
             verify_query = """
-                SELECT 
+                 SELECT 
                     users.UserID, 
                     users.Username, 
-                    passcode.CreatedTime, 
-                    passcode.ExpiredTime, 
-                    logs.EntryTime, 
-                    rooms.RoomName
+                    passcode.GenPasscode,
+                    passcodehistory.CreatedTime, 
+                    passcodehistory.ExpiredTime, 
+                    clients.RoomName
                 FROM passcode
                 INNER JOIN users ON passcode.UserID = users.UserID
-                LEFT JOIN logs ON users.UserID = logs.UserID
-                LEFT JOIN rooms ON logs.RoomID = rooms.RoomID
+                LEFT JOIN logattempts ON users.UserID = logattempts.UserID
+                LEFT JOIN passcodehistory ON passcode.PassID = passcodehistory.PassID
+                LEFT JOIN clients ON logattempts.ClientID = clients.ClientID
                 WHERE passcode.GenPasscode = %s;
             """
             cursor.execute(verify_query, (received_code,))
@@ -372,10 +373,11 @@ def verify_and_display():
                 user_data = {
                     'UserID': result[0],
                     'Username': result[1],
-                    'CreatedTime': result[2],
-                    'ExpiredTime': result[3],
-                    'EntryTime': result[4],
-                    'Room': result[5]
+                    'GenPasscode': result[2],
+                    'CreatedTime': result[3],
+                    'ExpiredTime': result[4],
+                    'EntryTime': result[5],
+                    'Room': result[6]
                 }
 
                  # Generate the current EntryTime
