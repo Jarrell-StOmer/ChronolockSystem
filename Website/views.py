@@ -50,9 +50,42 @@ def access_request(userId, passcode):
 
 @views.route('/passcode', methods=['GET'])
 def passcode():
-    
-    # Render the PasscodePage template
-    return render_template('PasscodePage.html')
+    user_id = session.get('UserID')
+    fetch_passcodes_query = """
+        SELECT p.UserID, p.GenPasscode, ph.CreatedTime, ph.ExpiredTime
+        FROM passcode p
+        INNER JOIN passcodehistory ph ON p.PassID = ph.PassID
+        WHERE p.UserID = %s
+        ORDER BY ph.CreatedTime DESC;
+    """
+
+    passcodes = []  # Initialize an empty list for passcodes
+
+    try:
+        # Connect to the database
+        connection = mysql.connector.connect(
+            host='localhost',
+            port=3306,
+            database='lock',
+            user='dev',
+            password='dev'
+        )
+
+        if connection.is_connected():
+            cursor = connection.cursor()
+            cursor.execute(fetch_passcodes_query, (user_id,))
+            passcodes = cursor.fetchall()  # Fetch all passcodes for the user
+
+    except Error as e:
+        flash(f"An error occurred while fetching passcodes: {e}", category='error')
+
+    finally:
+        if connection and connection.is_connected():
+            cursor.close()
+            connection.close()
+
+    # Pass the passcodes to the template
+    return render_template('PasscodePage.html', passcodes=passcodes)
 
 @views.route('/generate_passcode', methods=['POST'])
 def generate_passcode_button():
