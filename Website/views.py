@@ -8,44 +8,39 @@ from flask import jsonify
 
 views = Blueprint('views', __name__)
 
-@views.route('/access_request/<userId>/<passcode>', methods=['GET'])
-def access_request(userId, passcode):
+@views.route('/access_request/<rasp_id>/<passcode>')
+def access_request(rasp_id, passcode):
 
-    try:
-        # Connect to the database
-        connection = mysql.connector.connect(
-            host='localhost',
-            port=3306,
-            database='lock',
-            user='dev',
-            password='dev'
-        )
+    response = get_user_given_passcode(rasp_id, passcode)
+    user = response if response != None else None
 
-        if connection.is_connected():
-            cursor = connection.cursor()
-
-            # Query to fetch user data with roles
-            select_query = """
-                SELECT users.Username 
-                FROM passcode 
-                INNER JOIN users ON users.UserID=passcode.UserID
-                WHERE passcode.UserId=%s AND passcode.GenPasscode = %s;"""
-
-            cursor.execute(select_query, (userId, passcode) )
-            user = cursor.fetchall()  # Fetch all rows from the query result
-            
-            if user==[]:
-                return 'False'
-            
-    except Error as e:
-        flash(f"An error occurred while retrieving user data: {e}", category='error')
-
-    finally:
-        if connection.is_connected():
-            cursor.close()
-            connection.close()
+    if user!= None:
+        return Response(f"Welcome {user}", mimetype='text/plain')
+    else:
+        return Response("Access Denied", mimetype='text/plain')
     
-        return 'True'  # Return True if the user exists
+def get_user_given_passcode(user_id, passcode):
+
+	connection = db_connect()
+	if connection.is_connected():
+		cursor=connection.cursor()
+		query="""SELECT users.UserName, users.UserID  
+		FROM (passcodes
+		INNER JOIN users ON passcodes.UserID = users.UserID) 
+		WHERE passcodes.UserId=%s AND passcodes.GenPasscode=%s;"""
+		data=((user_id, passcode,))
+		cursor.execute(query, data)
+		result = cursor.fetchone()
+		print(result)
+		cursor.close()
+		connection.close()
+	else:
+		return None
+	if result == None:
+		return None
+	
+	# Check if the passcode is valid and not expired	
+	return result[0] # Return the username of the user who has the passcode
 
 
 @views.route('/passcode', methods=['GET'])
@@ -417,3 +412,4 @@ def verify_and_display():
         if connection and connection.is_connected():
             cursor.close()
             connection.close()
+

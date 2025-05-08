@@ -36,23 +36,24 @@
         }
 
         .sidebar {
-            position: flex;
+            position: fixed; /* Fix the sidebar to the left of the page */
             top: 200px;
             left: 20px;
             display: flex;
-            flex-direction: column;
-            gap: 10px;
+            flex-direction: column; /* Stack buttons vertically */
+            gap: 10px; /* Add spacing between buttons */
         }
 
         .sidebar button {
             width: 150px;
             padding: 10px;
             font-size: 1em;
+            cursor: pointer;
         }
 
         .sidebar a {
-        text-decoration: none; /* Remove underline from links */
-        display: inline-block; /* Ensure the link behaves like a block element */
+            text-decoration: none; /* Remove underline from links */
+            display: inline-block; /* Ensure the link behaves like a block element */
         }
 
         .sidebar a button {
@@ -61,7 +62,6 @@
             font-size: 1em;
             cursor: pointer;
         }
-
         .Delete {
            background-color: rgba(0, 0, 0, 0.5);
            width: 100vw; 
@@ -174,22 +174,25 @@
         </div>
     </div>
 
-    </body>
-        <div class="sidebar">
-            <button type="button" id="addUser">Add User</button>
-            <button type="button" id="deleteUser">Delete User</button>
-           
-            <a href="{{ url_for('views.report') }}">
-                <button type="button">Report</button>
-            </a>
-            
-            <button type="button" id="search">Search</button>
-    </div>
+
+<div class="sidebar">
+    <button type="button" id="addUser">Add User</button>
+    <button type="button" id="deleteUser">Delete User</button>
+    <a href="{{ url_for('views.report') }}">
+        <button type="button">Report</button>
+    </a>
+</div>
+
+
     <div class="logout-button">
         <a href="{{ url_for('auth.login') }}">
             <button type="button">Logout</button>
         </a>
     </div>
+
+
+
+</body>
     <script>
 
         document.getElementById("addUser").addEventListener("click", function() {
@@ -200,6 +203,7 @@
             document.querySelector(".Delete").style.display = "flex";
         });
         
+</script>
     </script>
 
 <table>
