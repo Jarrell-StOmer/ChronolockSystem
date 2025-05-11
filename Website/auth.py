@@ -2,6 +2,7 @@ from flask import Blueprint , render_template, request, flash, redirect, url_for
 from flask import Flask
 import mysql.connector
 from mysql.connector import Error
+from connection import get_connection
 auth = Blueprint('auth', __name__)
 
 
@@ -14,13 +15,7 @@ def login():
 
         try:
             # Connect to the database
-            connection = mysql.connector.connect(
-                host='localhost',
-                port=3306,
-                database='lock',
-                user='dev',
-                password='dev'
-            )
+            connection = get_connection()
 
             if connection.is_connected():
                 cursor = connection.cursor()

@@ -5,6 +5,7 @@ import random
 from datetime import datetime, timedelta
 import json
 from flask import jsonify
+from connection import get_connection  
 
 views = Blueprint('views', __name__)
 
@@ -22,13 +23,8 @@ def access_request(user_id, passcode):
 def get_user_given_passcode(user_id, passcode):
 
     print(user_id, passcode) 
-    connection = mysql.connector.connect(
-            host='localhost',
-            port=3306,
-            database='lock',
-            user='dev',
-            password='dev'
-        )
+    connection = get_connection()
+
     if connection.is_connected():
         cursor=connection.cursor()
         query="""SELECT users.UserName, users.UserID  
@@ -65,13 +61,7 @@ def passcode():
 
     try:
         # Connect to the database
-        connection = mysql.connector.connect(
-            host='localhost',
-            port=3306,
-            database='lock',
-            user='dev',
-            password='dev'
-        )
+        connection = get_connection()
 
         if connection.is_connected():
             cursor = connection.cursor()
@@ -106,13 +96,7 @@ def generate_passcode_button():
             return redirect(url_for('auth.login'))
 
         # Connect to the database
-        connection = mysql.connector.connect(
-            host='localhost',
-            port=3306,
-            database='lock',
-            user='dev',
-            password='dev'
-        )
+        connection = get_connection()
 
         if connection.is_connected():
             cursor = connection.cursor()
@@ -171,13 +155,7 @@ def Admin_page():
 
     try:
         # Connect to the database
-        connection = mysql.connector.connect(
-            host='localhost',
-            port=3306,
-            database='lock',
-            user='dev',
-            password='dev'
-        )
+        connection = get_connection()
 
         if connection.is_connected():
             cursor = connection.cursor()
@@ -220,13 +198,7 @@ def add_user():
 
         try:
             # Connect to the database
-            connection = mysql.connector.connect(
-                host='localhost',
-                port=3306,
-                database='lock',
-                user='dev',
-                password='dev'
-            )
+            connection = get_connection()
 
             if connection.is_connected():
                 cursor = connection.cursor()
@@ -270,13 +242,7 @@ def delete_user():
 
         try:
             # Connect to the database
-            connection = mysql.connector.connect(
-                host='localhost',
-                port=3306,
-                database='lock',
-                user='dev',
-                password='dev'
-            )
+            connection = get_connection()
 
             if connection.is_connected():
                 cursor = connection.cursor()
@@ -340,13 +306,7 @@ def verify_and_display():
             return render_template('Report.html', user=None)
 
         # Connect to the database
-        connection = mysql.connector.connect(
-            host='localhost',
-            port=3306,
-            database='lock',
-            user='dev',
-            password='dev'
-        )
+        connection = get_connection()
 
         if connection.is_connected():
             cursor = connection.cursor()
